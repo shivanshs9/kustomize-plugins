@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        versionId/sec-test: ''
+    spec:
+      containers:
+        - name: app
+          image: app:latest
+
+---
+
+apiVersion: mumoshu.github.io/v1alpha1
+kind: AWSSecret
+metadata:
+  name: sec-test
+  namespace: default
+spec:
+  stringDataFrom:
+    secretsManagerSecretRef:
+      secretId: random-secret
+      versionId: 639c75cc-74ae-4ec9-adda-51874969b328

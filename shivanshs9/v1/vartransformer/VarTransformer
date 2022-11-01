@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Source: https://github.com/kubernetes-sigs/kustomize/issues/4120#issuecomment-907882084
+
+set -e
+
+res="$(cat $1)"
+sedMap=()
+
+length=$(echo "$res" | yq e '.vars | length' -)
+
+for (( i=0; i<$length; i++ ))
+do
+   var="$(echo "$res" | yq e '.vars['$i']' -)"
+   varName=$(echo "$var" | yq e '.name' -)
+   if [ "$(echo "$var" | yq e '. | has("env")' -)" == 'true' ]
+   then
+      envVar=$(echo "$var" | yq e '.env' -)
+      var="$(echo "$var" | yq e '.value = env('$envVar')' -)"
+   fi
+   varValue="$(echo "$var" | yq e '.value' -)"
+   sedMap+=(-e "s#\$(${varName})#${varValue}#g")
+done
+
+# echo "${sedMap[@]}"
+sed "${sedMap[@]}"

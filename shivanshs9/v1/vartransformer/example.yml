@@ -1,0 +1,21 @@
+apiVersion: shivanshs9/v1
+kind: VarTransformer
+metadata:
+name: test-variables
+vars:
+
+- name: message
+  value: hello world
+- name: how_many
+  value: 20
+- name: some.url
+  value: example.com
+- name: whoami
+  env: USER
+- name: user.home
+  env: HOME
+
+# multi line value with spaces in name
+
+- name: fancy message
+  value: no multi line allowed in VarTransformer

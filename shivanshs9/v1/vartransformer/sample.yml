@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: some-place
+  labels:
+    user: $(whoami)
+spec:
+  type: ExternalName
+  sessionAffinity: None
+  externalName: $(some.url)

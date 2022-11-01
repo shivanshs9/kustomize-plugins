@@ -1,0 +1,8 @@
+apiVersion: shivanshs9/v1
+kind: SecretChecksum
+secrets:
+  - namespacedName: default.sec-test
+    kind: AWSSecret
+    apiVersion: mumoshu.github.io/v1alpha1
+    versionInfoField: spec.stringDataFrom.secretsManagerSecretRef.versionId
+    targetAnnotation: versionId/sec-test
