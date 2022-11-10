@@ -4,6 +4,7 @@
 
 set -e
 
+# YQ binary can be provided in $KUSTOMIZE_PLUGIN_HOME
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 YQ="$SCRIPTPATH/../../../yq"
 if [[ ! -x "$YQ"  ]]; then
