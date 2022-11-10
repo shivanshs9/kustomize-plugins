@@ -4,21 +4,27 @@
 
 set -e
 
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+YQ="$SCRIPTPATH/../../../yq"
+if [[ ! -x "$YQ"  ]]; then
+   YQ="$(command -v yq)"
+fi
+
 res="$(cat $1)"
 sedMap=()
 
-length=$(echo "$res" | yq e '.vars | length' -)
+length=$(echo "$res" | $YQ e '.vars | length' -)
 
 for (( i=0; i<$length; i++ ))
 do
-   var="$(echo "$res" | yq e '.vars['$i']' -)"
-   varName=$(echo "$var" | yq e '.name' -)
-   if [ "$(echo "$var" | yq e '. | has("env")' -)" == 'true' ]
+   var="$(echo "$res" | $YQ e '.vars['$i']' -)"
+   varName=$(echo "$var" | $YQ e '.name' -)
+   if [ "$(echo "$var" | $YQ e '. | has("env")' -)" == 'true' ]
    then
-      envVar=$(echo "$var" | yq e '.env' -)
-      var="$(echo "$var" | yq e '.value = env('$envVar')' -)"
+      envVar=$(echo "$var" | $YQ e '.env' -)
+      var="$(echo "$var" | $YQ e '.value = env('$envVar')' -)"
    fi
-   varValue="$(echo "$var" | yq e '.value' -)"
+   varValue="$(echo "$var" | $YQ e '.value' -)"
    sedMap+=(-e "s#\$(${varName})#${varValue}#g")
 done
 
