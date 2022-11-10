@@ -8,8 +8,14 @@ set -e
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 YQ="$SCRIPTPATH/../../../yq"
 if [[ ! -x "$YQ"  ]]; then
+   set +e
    YQ="$(command -v yq)"
+   if [[ ! $? -eq 0 ]]; then
+      echo '[ERROR] Need to install 'yq' package (https://github.com/mikefarah/yq).' > /dev/stderr
+      exit 1
+   fi
 fi
+set -e
 
 res="$(cat $1)"
 sedMap=()
